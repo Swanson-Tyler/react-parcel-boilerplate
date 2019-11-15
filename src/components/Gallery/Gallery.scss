@@ -1,0 +1,29 @@
+@import '../../styles/global.scss';
+
+.gallery {
+
+}
+
+.galleryList {
+    display: flex;
+    flex-direction: column;
+}
+
+.galleryItem {
+    background: rgba(0, 0, 0, 0.3);
+    color: black;
+    display: block;
+    padding: 5%;
+    position: relative;
+    width: 100%;
+}
+
+.fontExample {
+
+}
+
+.removeButton {
+    bottom: 20px;
+    position: absolute;
+    right: 10%;
+}
