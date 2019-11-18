@@ -1,7 +1,9 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import Dropzone from 'react-dropzone';
 import Styles from './Gallery.scss';
 import { fontData } from '../../mockdata/fonts';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DEFAULT_PANGRAM = 'The quick brown fox jumps over the lazy dog';
 const ACCEPTED_FONT_EXTENSIONS = ['ttf', 'otf'];
@@ -15,12 +17,19 @@ class Gallery extends React.Component {
   }
 
   componentDidMount() {
+    toast('Wow so easy !', {
+      className: Styles.toast,
+      bodyClassName: Styles.toastBody,
+      progressClassName: Styles.toastProgressBar
+    });
+
     this.setState({ allFonts: fontData.fonts });
   }
 
-  onItemRemove(itemIndex) {
+  onItemRemove(name) {
+    // filtering by name is safer than by index. Especially if we want the user to be able to shuffle order of the fonts
     const { allFonts } = this.state;
-    const updatedFonts = Array.from(allFonts).filter((_, index) => itemIndex !== index);
+    const updatedFonts = Array.from(allFonts).filter(font => font.name !== name);
     this.setState({ allFonts: updatedFonts });
   }
 
@@ -34,13 +43,23 @@ class Gallery extends React.Component {
       const splitFileName = file.name.split('.');
       const fileExtension = splitFileName[splitFileName.length - 1];
 
+      if (!ACCEPTED_FONT_EXTENSIONS.includes(fileExtension)) {
+        toast(`${file.name} does not have an accepted file extension`, {
+          className: Styles.toast,
+          bodyClassName: Styles.toastBody,
+          progressClassName: Styles.toastProgressBar
+        });
+        console.log(`${file.name} does not have an accepted file extension`);
+        return;
+      }
+
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
       fileReader.onload = () => {
         this.uploadFont({
           name: splitFileName[0],
           fileName: file.name,
-          url: 'http://example.com/font.ttf'
+          data: fileReader.result
         });
       };
 
@@ -56,7 +75,12 @@ class Gallery extends React.Component {
       const response = {
         // fake response
         ok: true,
-        statusCode: 200
+        statusCode: 200,
+        data: {
+          name: newFont.name,
+          fileName: newFont.fileName,
+          url: 'http://example.com/font.ttf'
+        }
       };
 
       if (!response.error) {
@@ -72,27 +96,41 @@ class Gallery extends React.Component {
     const { allFonts, fontExampleCopy } = this.state;
 
     return (
-      <Dropzone onDrop={acceptedFiles => this.handleFileDrop(acceptedFiles)}>
-        {({ getRootProps, getInputProps }) => (
-          <div className={Styles.gallery} {...getRootProps()}>
-            {/* <input {...getInputProps()} type="file" name="files" /> */}
-            <div className={Styles.galleryList}>
-              {allFonts.map(({ name, fileName, url }, index) => {
-                return (
-                  <GalleryItem
-                    key={name}
-                    name={name}
-                    fileName={fileName}
-                    url={url}
-                    copy={fontExampleCopy}
-                    onRemove={this.onItemRemove}
-                  />
-                );
-              })}
+      <React.Fragment>
+        <Dropzone onDrop={acceptedFiles => this.handleFileDrop(acceptedFiles)}>
+          {({ getRootProps, getInputProps }) => (
+            <div
+              className={Styles.gallery}
+              {...getRootProps()}
+              onClick={() => {
+                toast('Wow so easy !', {
+                  className: Styles.toast,
+                  bodyClassName: Styles.toastBody,
+                  progressClassName: Styles.toastProgressBar
+                });
+              }}
+            >
+              {/* <input {...getInputProps()} type="file" name="files" /> */}
+              <div className={Styles.galleryList}>
+                {allFonts.map(({ name, fileName, url }) => {
+                  return (
+                    <GalleryItem
+                      key={name}
+                      name={name}
+                      fileName={fileName}
+                      url={url}
+                      copy={fontExampleCopy}
+                      onRemove={() => {
+                        this.onItemRemove(name);
+                      }}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        )}
-      </Dropzone>
+          )}
+        </Dropzone>
+      </React.Fragment>
     );
   }
 }
@@ -102,16 +140,23 @@ class GalleryItem extends React.Component {
     super();
     this.state = { loading: true, fontName: null };
     this.loadFont = this.loadFont.bind(this);
+    this.timeoutId = null;
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    this.timeoutId = setTimeout(() => {
       this.loadFont();
-    }, 2000); // mimic fetch loading time
+    }, 500); // mimic fetch loading time
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeoutId);
   }
 
   shouldComponentUpdate() {
     const { loading } = this.state;
+    // If we've already loaded the font, no need to re-render when the parent state updates. Dropzone will call re-render based on mousemove so
+    // we should prevent re-render unless necessary.
     if (!loading) {
       return false;
     }
