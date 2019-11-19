@@ -1,6 +1,7 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 import Dropzone from 'react-dropzone';
+import defaultToast from 'components/Toast/Toast';
 import Styles from './Gallery.scss';
 import { fontData } from '../../mockdata/fonts';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,11 +18,7 @@ class Gallery extends React.Component {
   }
 
   componentDidMount() {
-    toast('Wow so easy !', {
-      className: Styles.toast,
-      bodyClassName: Styles.toastBody,
-      progressClassName: Styles.toastProgressBar
-    });
+    toast('Wow so easy !', defaultToast);
 
     this.setState({ allFonts: fontData.fonts });
   }
@@ -44,11 +41,6 @@ class Gallery extends React.Component {
       const fileExtension = splitFileName[splitFileName.length - 1];
 
       if (!ACCEPTED_FONT_EXTENSIONS.includes(fileExtension)) {
-        toast(`${file.name} does not have an accepted file extension`, {
-          className: Styles.toast,
-          bodyClassName: Styles.toastBody,
-          progressClassName: Styles.toastProgressBar
-        });
         console.log(`${file.name} does not have an accepted file extension`);
         return;
       }
@@ -102,12 +94,11 @@ class Gallery extends React.Component {
             <div
               className={Styles.gallery}
               {...getRootProps()}
-              onClick={() => {
-                toast('Wow so easy !', {
-                  className: Styles.toast,
-                  bodyClassName: Styles.toastBody,
-                  progressClassName: Styles.toastProgressBar
-                });
+              onKeyDown={e => {
+                console.log(e.key);
+                if (e.key === 'f') {
+                  toast('Wow so easy !', defaultToast);
+                }
               }}
             >
               {/* <input {...getInputProps()} type="file" name="files" /> */}

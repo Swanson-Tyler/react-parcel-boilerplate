@@ -1,44 +1,57 @@
 @import '../../styles/global.scss';
 
 .toast {
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    position: absolute;
-    text-align: center;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
-}
-
-.toastWrapper {
-    align-items: center;
+    background: green !important;
+    border-radius: 1px;
+    border-radius: 12px;
+    box-shadow: 3px 6px 12px rgba(0, 0, 0, 0.32);
+    box-sizing: border-box;
+    cursor: pointer;
+    direction: ltr;
     display: flex;
-    flex-direction: column;
-    width: 100%;
+    font-family: sans-serif;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    max-height: 800px;
+    min-height: 64px;
+    overflow: hidden;
+    padding: 8px;
+    position: relative;
 }
 
-.toastCopy {
-    background: green;
-    border-radius: 16px;
-    color: black;
+.toastBody {
     display: inline-block;
-    font-size: 16px;
-    padding: 24px;
-
-    .active & {
-        animation: fadeDown 500ms forwards ease;
-    }
+    padding: 5%;
 }
 
-@keyframes fadeDown {
-    0% {
+.toastOnEnter {
+    animation-name: slideDown;
+}
+
+.toastOnExit {
+    animation-name: slideUp;
+}
+
+@keyframes slideDown {
+    from {
         opacity: 0;
         transform: translate3d(0, -100%, 0);
     }
 
-    100% {
+    to {
         opacity: 1;
         transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate3d(0, -100%, 0);
     }
 }

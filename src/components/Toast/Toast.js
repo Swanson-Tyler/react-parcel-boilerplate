@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { css } from 'utils';
+import { cssTransition } from 'react-toastify';
 import Styles from './Toast.scss';
 
-const Toast = ({ message, className }) => {
-  const [toastActive, setToastActive] = useState(!!message);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('set Active');
-      setToastActive(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-  console.log('render');
-  return (
-    <div className={css(Styles.Toast, toastActive && Styles.active, className)}>
-      <div className={Styles.toastWrapper}>
-        <div className={Styles.toastCopy}>{message}</div>
-      </div>
-    </div>
-  );
+const toastTransition = cssTransition({
+  enter: Styles.toastOnEnter,
+  exit: Styles.toastOnExit,
+  duration: [750, 750]
+  //   autoClose: 2000
+});
+
+const defaultToast = {
+  className: Styles.toast,
+  bodyClassName: Styles.toastBody,
+  progressClassName: Styles.toastProgressBar,
+  transition: toastTransition,
+  closeButton: false,
+  closeOnClick: true,
+  autoClose: 8000,
+  hideProgressBar: true
 };
 
-export default Toast;
+export default defaultToast;

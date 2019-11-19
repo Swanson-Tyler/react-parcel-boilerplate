@@ -1,1 +1,14 @@
 @import '../../styles/global.scss';
+
+.toastContainer {
+    box-sizing: border-box;
+    color: #fff;
+    left: 50%;
+    margin-left: -160px;
+    padding: 4px;
+    position: fixed;
+    top: 1em;
+    transform: translate3d(0, 0, 9999px);
+    width: 320px;
+    z-index: 9999;
+}
