@@ -1,34 +1,37 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import { css } from 'utils';
+import Styles from './HookTest.scss';
 
 const HookTest = () => {
-  const [count, setCount] = useState(0);
-
-  const [value, setValue] = useState(0);
-
-  const onChange = useCallback(
-    e => {
-      return setValue(e.target.value);
-    },
-    [value]
-  );
-
+  const [dropdownActive, setDropdownActive] = useState(false);
+  console.log(dropdownActive);
   return (
     <div>
-      <div
-        onClick={() => {
-          setCount(count + 1);
-        }}
-      >
-        {count}
-      </div>
-      <Input value={value} onChange={onChange} />
+      {ReactDOM.createPortal(
+        <div className={Styles.modal}>
+          <div className={Styles.tintOverlay} />
+          <div className={Styles.container}>
+            <div className={Styles.inputContainer}>
+              <div className={Styles.select}>
+                <div
+                  className={Styles.trigger}
+                  onClick={() => {
+                    console.log('click');
+                    setDropdownActive(!dropdownActive);
+                  }}
+                >
+                  Select
+                  <div className={css(Styles.dropdown, dropdownActive && Styles.active)} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.getElementById('app')
+      )}
     </div>
   );
-};
-
-const Input = ({ onChange, value }) => {
-  console.log('render');
-  return <input value={value} onChange={onChange} />;
 };
 
 export default HookTest;
