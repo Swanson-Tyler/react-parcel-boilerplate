@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { css } from 'utils';
+import { css, validateYouTubeUrl } from 'utils';
 import Styles from './HookTest.scss';
+
+const apiKey = 'AIzaSyBxckOowbomkUHqmjAfQl_Rvq7EW4EtcRQ';
 
 const HookTest = () => {
   const [dropdownActive, setDropdownActive] = useState(false);
-  console.log(dropdownActive);
+
   return (
     <div>
       {ReactDOM.createPortal(
@@ -22,7 +24,12 @@ const HookTest = () => {
                   }}
                 >
                   Select
-                  <div className={css(Styles.dropdown, dropdownActive && Styles.active)} />
+                  <div
+                    className={css(Styles.dropdown, dropdownActive && Styles.active)}
+                    onMouseLeave={() => {
+                      setDropdownActive(false);
+                    }}
+                  />
                 </div>
               </div>
             </div>

@@ -17,3 +17,13 @@ export const css = (...args) => {
 
   return stylesList.join(' ');
 };
+
+export const validateYouTubeUrl = url => {
+  if (!url) {
+    return false;
+  }
+
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return !!(match && match[2].length === 11);
+};

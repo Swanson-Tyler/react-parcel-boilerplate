@@ -12,3 +12,11 @@
     width: 320px;
     z-index: 9999;
 }
+
+.link {
+    color: black;
+
+    &.active {
+        color: red;
+    }
+}
