@@ -85,19 +85,19 @@ const ContentWrapper = () => {
         </li>
       </ul>
       <Switch>
-        <PrivateRoute path="/project/:projectId/photos">
+        <Route path="/project/:projectId/photos">
           <Photos />
-        </PrivateRoute>
-        <PrivateRoute path="/project/:projectId/fonts">
+        </Route>
+        <Route path="/project/:projectId/fonts">
           <h2>Fonts</h2>
           <Fonts />
-        </PrivateRoute>
-        <PrivateRoute path="/project/:projectId/icons">
+        </Route>
+        <Route path="/project/:projectId/icons">
           <Icons />
-        </PrivateRoute>
-        <PrivateRoute path="/project/:projectId/videos">
+        </Route>
+        <Route path="/project/:projectId/videos">
           <Videos />
-        </PrivateRoute>
+        </Route>
       </Switch>
     </React.Fragment>
   );
